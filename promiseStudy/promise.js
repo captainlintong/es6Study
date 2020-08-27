@@ -1,0 +1,3 @@
+/**
+ * promise.prototype.finally()
+ */
