@@ -73,3 +73,13 @@ getJSON("/posts.json").then(function (json) {
 }, function (error) {
 	console.error('出错了', error);
 });
+/**-------------------------------------------------------------------------------------------- */
+
+const p1 = new Promise(function (resolve, reject) {
+  // ...
+});
+
+const p2 = new Promise(function (resolve, reject) {
+  // ...
+  resolve(p1);
+})
