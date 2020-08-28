@@ -48,7 +48,7 @@ new Promise((resolve, reject) => {
 })
 /**
  * 注意：调用resolve reject 并不会终结Promise的参数函数的执行
- * 上面代码中，调用resolve(1)以后，后面的consolve.log（2）还是会执行，并且会首先打印出来，因为立即resolved
+ * 上面代码中，调用resolve(1)以后，后面的console.log（2）还是会执行，并且会首先打印出来，因为立即resolved
  * 的promise是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务。
  *
  * 一般来说，调用resolve reject

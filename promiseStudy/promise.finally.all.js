@@ -11,7 +11,7 @@
 // }
 
 // var p = new Promise((resolve, reject) => {
-// 	resolve('resovled')
+// 	resolve('resolved')
 // })
 // p.then(val => {
 
@@ -58,7 +58,7 @@ const p1 = new Promise((resolve, reject) => {
 	resolve('resolved')
 })
 .then(res => res)
-const p2 = new Promise((resovle, reject) => {
+const p2 = new Promise((resolve, reject) => {
 	throw new Error('出错了')
 })
 .then(res => res)
