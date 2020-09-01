@@ -12,7 +12,7 @@
 // 		if (propKey in target) {
 // 			return target[propKey]
 // 		} else {
-// 			throw new ReferenceError("Prop name \"" + propKey +  "\" does not exist.")
+// 			throw new ReferenceError("Prop name \"" + propKey + "\" does not exist.")
 // 		}
 // 	}
 // })
@@ -21,7 +21,7 @@
 
 
 // let photo = new Proxy({}, {
-// 	get (target, propertyKey, receiver) {
+// 	get(target, propertyKey, receiver) {
 // 		console.log('GET ' + propertyKey)
 // 		return target[propertyKey]
 // 	}
@@ -29,3 +29,62 @@
 // let obj = Object.create(photo)
 // console.log(obj.foo)
 
+
+// function createArray(...elements) {
+// 	// console.log(...elements)
+// 	let handler = {
+// 		get (target, propKey, receiver) {
+// 			let index = Number(propKey)
+// 			if (index < 0) {
+// 				console.log(index)
+// 				propKey = String(target.length + index)
+// 			}
+// 			return Reflect.get(target, propKey, receiver)
+// 		}
+// 	}
+// 	let target = []
+// 	target.push(...elements)
+// 	// console.log(target)
+// 	return new Proxy(target, handler)
+// }
+// let arr = createArray('a', 'b', 'c')
+// console.log(arr)
+
+
+var pipe = function (value) {
+	var funcStack = []
+	var myProxy = new Proxy({}, {
+		get: function (pipeObject, fnName) {
+			if (fnName === 'get') {
+				// console.log('get')
+				return funcStack.reduce((val, fn) => {
+					// console.log(fn(val))
+					return fn(val)
+				}, value)
+			}
+			funcStack.push(window[fnName])
+			console.log('1')
+			return myProxy
+		}
+	})
+	console.log('2')
+	return myProxy
+}
+
+var double = n => n * 2;
+var pow = n => n * n;
+var reverseInt = n => n.toString().split("").reverse().join("") | 0;
+
+// pipe(3).double.pow.reverseInt.get; // 63
+console.log(pipe(3))
+
+
+
+
+
+// var arr = [1, 2, 3, 4];
+// var sum = arr.reduce(function(prev, cur, index, arr) {
+//     console.log(prev, cur, index);
+//     return prev + cur;
+// })
+// console.log(arr, sum);
