@@ -51,40 +51,86 @@
 // console.log(arr)
 
 
-var pipe = function (value) {
-	var funcStack = []
-	var myProxy = new Proxy({}, {
-		get: function (pipeObject, fnName) {
-			if (fnName === 'get') {
-				// console.log('get')
-				return funcStack.reduce((val, fn) => {
-					// console.log(fn(val))
-					return fn(val)
-				}, value)
-			}
-			funcStack.push(window[fnName])
-			console.log('1')
-			return myProxy
-		}
-	})
-	console.log('2')
-	return myProxy
-}
-
-var double = n => n * 2;
-var pow = n => n * n;
-var reverseInt = n => n.toString().split("").reverse().join("") | 0;
-
-// pipe(3).double.pow.reverseInt.get; // 63
-console.log(pipe(3))
-
-
-
+// var pipe = function (value) {
+// 	var funcStack = []
+// 	var myProxy = new Proxy({}, {
+// 		get: function (pipeObject, fnName) {
+// 			console.log('==========')
+// 			console.log(pipeObject)
+// 			console.log(fnName)
+// 			if (fnName === 'get') {
+// 				console.log('get')
+// 				console.log(funcStack)
+// 				return funcStack.reduce((val, fn) => {
+// 					console.log(fn(val))
+// 					return fn(val)
+// 				}, value)
+// 			}
+// 			console.log(window[fnName])
+// 			funcStack.push(window[fnName])
+// 			console.log(funcStack)
+// 			console.log('1')
+// 			console.log(myProxy)
+// 			return myProxy
+// 		}
+// 	})
+// 	console.log('21')
+// 	return myProxy
+// }
+// var double = n => n * 2;
+// var pow = n => n * n;
+// var reverseInt = n => n.toString().split("").reverse().join("") | 0;
+// console.log(pipe(3).double.pow.reverseInt.get)
 
 
 // var arr = [1, 2, 3, 4];
 // var sum = arr.reduce(function(prev, cur, index, arr) {
-//     console.log(prev, cur, index);
+//     console.log(prev, cur, index, arr);
 //     return prev + cur;
-// })
+// },0)
 // console.log(arr, sum);
+
+
+
+
+
+// var a = 23
+// const b = 24
+// let c = 25
+// console.log(a)
+// console.log(b)
+// console.log(c)
+// console.log('-------------------')
+// console.log(window.a)
+// console.log(window.b)
+// console.log(window.c)
+
+
+const dom = new Proxy ({}, {
+	get(target, property) {
+		return function (attrs = {}, ...children) {
+			const el = document.createElement(property)
+			for (let prop of Object.keys(attrs)) {
+				el.setAttribute(prop, attrs[prop])
+			}
+			for (let child of children) {
+				if (typeof child === 'string') {
+					child = document.createTextNode(child)
+				}
+				el.appendChild(child)
+			}
+			return el
+		}
+	}
+})
+const el = dom.div({},
+	'Hello, my name is',
+	dom.a({href: 'http://www.baidu.com'}, 'Mark'),
+	'. I like:',
+	dom.ul({},
+		dom.li({}, 'The web'),
+		dom.li({}, 'Food'),
+		dom.li({}, '...actually that\s it')
+	)
+)
+document.body.appendChild(el)
