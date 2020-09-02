@@ -4,6 +4,9 @@
  */
 
 
+
+
+
 // var person = {
 // 	name: '张三'
 // }
@@ -20,6 +23,10 @@
 // console.log(proxy.age)
 
 
+
+
+
+
 // let photo = new Proxy({}, {
 // 	get(target, propertyKey, receiver) {
 // 		console.log('GET ' + propertyKey)
@@ -28,6 +35,12 @@
 // })
 // let obj = Object.create(photo)
 // console.log(obj.foo)
+
+
+
+
+
+
 
 
 // function createArray(...elements) {
@@ -49,6 +62,13 @@
 // }
 // let arr = createArray('a', 'b', 'c')
 // console.log(arr)
+
+
+
+
+
+
+
 
 
 // var pipe = function (value) {
@@ -83,12 +103,20 @@
 // console.log(pipe(3).double.pow.reverseInt.get)
 
 
+
+
+
+
+
 // var arr = [1, 2, 3, 4];
 // var sum = arr.reduce(function(prev, cur, index, arr) {
 //     console.log(prev, cur, index, arr);
 //     return prev + cur;
 // },0)
 // console.log(arr, sum);
+
+
+
 
 
 
@@ -106,31 +134,82 @@
 // console.log(window.c)
 
 
-const dom = new Proxy ({}, {
-	get(target, property) {
-		return function (attrs = {}, ...children) {
-			const el = document.createElement(property)
-			for (let prop of Object.keys(attrs)) {
-				el.setAttribute(prop, attrs[prop])
-			}
-			for (let child of children) {
-				if (typeof child === 'string') {
-					child = document.createTextNode(child)
-				}
-				el.appendChild(child)
-			}
-			return el
-		}
+
+
+
+
+
+// const dom = new Proxy({}, {
+// 	get(target, property) {
+// 		return function (attrs = {}, ...children) {
+// 			const el = document.createElement(property)
+// 			for (let prop of Object.keys(attrs)) {
+// 				el.setAttribute(prop, attrs[prop])
+// 			}
+// 			for (let child of children) {
+// 				if (typeof child === 'string') {
+// 					child = document.createTextNode(child)
+// 				}
+// 				el.appendChild(child)
+// 			}
+// 			return el
+// 		}
+// 	}
+// })
+// const el = dom.div({},
+// 	'Hello, my name is',
+// 	dom.a({
+// 		href: 'http://www.baidu.com'
+// 	}, 'Mark'),
+// 	'. I like:',
+// 	dom.ul({},
+// 		dom.li({}, 'The web'),
+// 		dom.li({}, 'Food'),
+// 		dom.li({}, '...actually that\s it')
+// 	)
+// )
+// document.body.appendChild(el)
+
+
+
+
+
+// const proxy = new Proxy({}, {
+// 	get: function (target, key, receiver) {
+// 		console.log(receiver)
+// 		return receiver
+// 	}
+// })
+// console.log(proxy.getReceiver === proxy)
+
+
+
+
+
+// const proxy = new Proxy({}, {
+// 	get: function (target, key, receiver) {
+// 		return receiver
+// 	}
+// })
+// const d = Object.create(proxy)
+// console.log(d.abc === d)
+
+
+/**
+ * 如果一个属性不可配置（configurable）且不可写（writable）,则Proxy不能修改该属性，否则通过Proxy对象访问该属性会报错。
+ */
+
+const target = Object.defineProperties({}, {
+	foo: {
+		value: 123,
+		writable: false,
+		configurable: false
 	}
 })
-const el = dom.div({},
-	'Hello, my name is',
-	dom.a({href: 'http://www.baidu.com'}, 'Mark'),
-	'. I like:',
-	dom.ul({},
-		dom.li({}, 'The web'),
-		dom.li({}, 'Food'),
-		dom.li({}, '...actually that\s it')
-	)
-)
-document.body.appendChild(el)
+const handler = {
+	get(target, propKey) {
+		return 'abc'
+	}
+}
+const proxy = new Proxy(target, handler)
+proxy.foo
