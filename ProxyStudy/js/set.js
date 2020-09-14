@@ -118,7 +118,7 @@
 // 	writable: false
 // })
 // const handler = {
-// 	set: function (obj, prop, value, receover) {
+// 	set: function (obj, prop, value, receiver) {
 // 		obj[prop] = 'ban'
 // 	}
 // }
